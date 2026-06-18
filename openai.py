@@ -2,15 +2,19 @@ import streamlit as st
 from google import genai
 from google.genai import types
 
+# 1. Standard configuration setup (No meta_tags here to avoid errors)
 st.set_page_config(
     page_title="My AI Assistant",
     page_icon="🤖",
-    layout="centered",
-    meta_tags=[{"name": "google-site-verification", "content": "y2W193eGLoj4HbUMZM29CuQV2zk"}]
+    layout="centered"
 )
 
-# Set up the webpage layout and title
-st.set_page_config(page_title="My AI Assistant", page_icon="🤖", layout="centered")
+# 🌐 GOOGLE VERIFICATION HANDLER: Bypasses the HTML upload requirement
+# If Google scans your site checking for the file, this provides it cleanly
+if "page" in st.query_params and st.query_params["page"] == "google-verify":
+    st.write("google-site-verification: googlee569019172d3ed62.html")
+    st.stop()
+
 st.title("🤖 My Advanced AI Assistant")
 st.caption("Now with persistent memory, real-time web search, and image parsing capabilities.")
 
@@ -82,7 +86,7 @@ if user_query := st.chat_input("Ask your AI anything..."):
         # Add assistant response to chat history memory
         st.session_state.messages.append({"role": "assistant", "content": response.text})
 
-    # 🛠️ UPGRADED ERROR HANDLER
+    # 🛠️ ERROR HANDLER
     except Exception as e:
         if "503" in str(e) or "UNAVAILABLE" in str(e).upper():
             st.warning(
