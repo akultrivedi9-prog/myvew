@@ -1,19 +1,29 @@
 import streamlit as st
+import streamlit.components.v1 as components
 from google import genai
 from google.genai import types
 
-# 1. Standard configuration setup (No meta_tags here to avoid errors)
+# 1. Standard configuration setup
 st.set_page_config(
     page_title="My AI Assistant",
     page_icon="🤖",
     layout="centered"
 )
 
-# 🌐 GOOGLE VERIFICATION HANDLER: Bypasses the HTML upload requirement
-# If Google scans your site checking for the file, this provides it cleanly
-if "page" in st.query_params and st.query_params["page"] == "google-verify":
-    st.write("google-site-verification: googlee569019172d3ed62.html")
-    st.stop()
+# 🌐 GOOGLE VERIFICATION INJECTION
+# This safely pushes your specific verification tag into your website background
+components.html(
+    """
+    <script>
+        var meta = document.createElement('meta');
+        meta.name = "google-site-verification";
+        meta.content = "y2W193eGLoj4HbUMZM29CuQV2zk3jdFnhdFKSjq7vhg";
+        parent.document.getElementsByTagName('head')[0].appendChild(meta);
+    </script>
+    """,
+    height=0,
+    width=0
+)
 
 st.title("🤖 My Advanced AI Assistant")
 st.caption("Now with persistent memory, real-time web search, and image parsing capabilities.")
