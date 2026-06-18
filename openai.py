@@ -2,6 +2,13 @@ import streamlit as st
 from google import genai
 from google.genai import types
 
+st.set_page_config(
+    page_title="My AI Assistant",
+    page_icon="🤖",
+    layout="centered",
+    meta_tags=[{"name": "google-site-verification", "content": "y2W193eGLoj4HbUMZM29CuQV2zk"}]
+)
+
 # Set up the webpage layout and title
 st.set_page_config(page_title="My AI Assistant", page_icon="🤖", layout="centered")
 st.title("🤖 My Advanced AI Assistant")
