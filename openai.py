@@ -6,8 +6,7 @@ st.set_page_config(page_title="My AI Assistant", page_icon="🤖", layout="cente
 st.title("🤖 My Custom AI Chatbot")
 st.caption("A clean web interface with full markdown and bold text support.")
 
-# 🟢 SECURE UPDATE: Pull the API key safely from hidden environment settings
-# Do NOT paste your raw key text here anymore.
+# 🟢 SECURE CONFIGURATION: Pull the API key safely from hidden environment settings
 try:
     api_key = st.secrets["GEMINI_API_KEY"]
     client = genai.Client(api_key=api_key)
@@ -15,9 +14,16 @@ except Exception as e:
     st.error("Missing Gemini API Key configuration. Please check your Secrets setup.")
     st.stop()
 
-# Initialize chat history inside the website's memory session
+# Initialize chat history inside the website's memory session if it doesn't exist
 if "messages" not in st.session_state:
     st.session_state.messages = []
+
+# 🧼 ADDED FEATURE: Add a reset button to the sidebar to clear conversation history
+with st.sidebar:
+    st.title("Settings")
+    if st.button("🗑️ Clear Chat History"):
+        st.session_state.messages = []
+        st.rerun()
 
 # Display previous conversation messages cleanly on the web page
 for message in st.session_state.messages:
@@ -48,5 +54,10 @@ if user_query := st.chat_input("Ask your AI anything..."):
         # Add assistant response to chat history memory
         st.session_state.messages.append({"role": "assistant", "content": response.text})
 
+    # 🛠️ UPGRADED ERROR HANDLER: Catch 503 high demand traffic spikes cleanly
     except Exception as e:
-        st.error(f"An error occurred: {e}")
+        if "503" in str(e) or "UNAVAILABLE" in str(e).upper():
+            st.warning(
+                "⚠️ Google's AI servers are experiencing temporary high traffic. Please wait 10 seconds and try resubmitting your message!")
+        else:
+            st.error(f"An error occurred: {e}")
